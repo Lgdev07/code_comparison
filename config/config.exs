@@ -15,11 +15,6 @@ config :code_comparison, CodeComparisonWeb.Endpoint,
   pubsub_server: CodeComparison.PubSub,
   live_view: [signing_salt: "5BkNzZjs"]
 
-# Configures Elixir's Logger
-config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
-
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
