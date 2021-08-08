@@ -1,0 +1,48 @@
+name: Elixir CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Start containers
+      run: docker-compose up -d --build
+
+    - name: Install dependencies
+      run: docker-compose run --rm web mix deps.get
+
+    - name: Format
+      run: docker-compose run --rm web mix format --check-formatted
+
+    - name: Credo
+      run: docker-compose run --rm web mix credo --strict
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.1
+
+      - uses: mhanberg/gigalixir-action@v0.4.0
+        with:
+          GIGALIXIR_APP: ${{ secrets.GIGALIXIR_APPNAME }}
+          GIGALIXIR_CLEAN: true
+          GIGALIXIR_USERNAME: ${{ secrets.GIGALIXIR_USERNAME }}
+          GIGALIXIR_PASSWORD: ${{ secrets.GIGALIXIR_PASSWORD }}
+          MIGRATIONS: false
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
