@@ -10,7 +10,7 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :code_comparison, CodeComparisonWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [host: "codecomparison.me", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   check_origin: [
     "//codecomparison.me",
