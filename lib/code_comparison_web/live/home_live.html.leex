@@ -11,7 +11,7 @@
 <form phx-change="update" phx-hook="CodeHighlight" id="content" class="font-calamity-bold text-center">
     <div class="px-4 w-1/5 inline-block">
       <label for="topic", class="text-blue-100 text-sm font-medium text-gray-700">Topic</label>
-      <select name="topic" value="teste" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+      <select name="topic" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
           <%= options_for_select(@topics, @topic) %>
       </select>
     </div>

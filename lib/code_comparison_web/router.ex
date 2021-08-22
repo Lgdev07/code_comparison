@@ -17,6 +17,6 @@ defmodule CodeComparisonWeb.Router do
   scope "/", CodeComparisonWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    live "/", HomeLive, :index
   end
 end

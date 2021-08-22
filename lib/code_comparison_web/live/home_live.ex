@@ -1,4 +1,4 @@
-defmodule CodeComparisonWeb.PageLive do
+defmodule CodeComparisonWeb.HomeLive do
   @moduledoc false
 
   use Phoenix.LiveView
@@ -7,10 +7,9 @@ defmodule CodeComparisonWeb.PageLive do
   @impl true
   def mount(_params, _session, socket) do
     topics = get_topics()
-    first_topic = get_topics() |> List.first()
-    languages = first_topic |> get_languages_by_topic()
-    language = languages |> List.first()
-
+    first_topic = List.first(topics)
+    languages = get_languages_by_topic(first_topic)
+    language = List.first(languages)
     language_code = get_language_code(language, first_topic)
 
     socket =
