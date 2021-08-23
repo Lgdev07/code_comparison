@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="icon" type="image/png" href="/favicon.ico">
+    <title>Code Comparison</title>
     <%= csrf_meta_tag() %>
-    <%= live_title_tag assigns[:page_title] || "CodeComparison", suffix: " · Phoenix Framework" %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Learn by seeing the differences between programming languages">
+    <meta name="keywords" content="Programming, Learn Code, Beginners">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="60 days">
+    <meta name="author" content="Lgdev07">
+    <meta property="og:title" content="Code Comparison">
+    <meta property="og:description" content="Learn by seeing the differences between programming languages">
+    <meta property="og:image" content="summary_large_image">
+    <meta property="og:url" content="https://codecomparison.me">
+    <meta property="og:site_name" content="Code Comparison">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
