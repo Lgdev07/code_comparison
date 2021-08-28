@@ -10,7 +10,7 @@
 <p align="center">Made with Elixir LiveView 🚀</p>
 
 <div align="center">
-🔗 <a href="codecomparison.me">codecomparison.me</a>
+🔗 <a href="https://www.codecomparison.me">codecomparison.me</a>
 </div>
 <br/>
 
