@@ -1,19 +1,68 @@
-# CodeComparison
+<h1 align="center">
+      <img alt="Code Comparison" title="Code Comparison" src=".github/logo.png" width="300px" />
+</h1>
 
-To start your Phoenix server:
+<h3 align="center">
+  Code Comparison
+</h3>
 
-  * Install dependencies with `mix deps.get`
-  * Install Node.js dependencies with `npm install` inside the `assets` directory
-  * Start Phoenix endpoint with `mix phx.server`
+<p align="center">Learn by seeing the differences between programming languages 📚</p>
+<p align="center">Made with Elixir LiveView 🚀</p>
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+<div align="center">
+🔗 <a href="codecomparison.me">codecomparison.me</a>
+</div>
+<br/>
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+<p align="center">
+  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/Lgdev07/code_comparison?color=%2304D361">
 
-## Learn more
+  <img alt="Made by Lgdev07" src="https://img.shields.io/badge/made%20by-Lgdev07-%2304D361">
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-%2304D361">
+
+  <a href="https://github.com/Lgdev07/code_comparison/stargazers">
+    <img alt="Stargazers" src="https://img.shields.io/github/stars/Lgdev07/code_comparison?style=social">
+  </a>
+</p>
+
+<p align="center">
+  <a href="#-installation-and-execution">Installation and execution</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-tests">Tests</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-how-to-contribute">How to contribute</a>&nbsp;&nbsp;&nbsp;
+</p>
+
+
+## 🎉 Presentation
+
+<h1 align="left">
+  <img style="border-radius: 10%;"src=".github/code_comparison.gif" width="500" />
+</h1>
+
+## 🚀 Installation and execution
+
+1. Clone this repository and go to the directory;
+2. Install mix dependencies `docker-compose run --rm web mix deps.get`;
+5. Install npm dependencies `docker-compose run --rm web npm install --prefix assets`;
+
+## 🧪 Tests
+
+1. Run `docker-compose run --rm web mix test`;
+
+## 😊 We encorage you to submit your code!!
+
+- Help us to increase the available code base.
+
+- Go to /topics and create a new one or submit with the language you know.
+
+- Please be concise and add comments explaining what the code is doing.
+
+## 🤔 How to contribute
+
+- Fork this repository;
+- Create a branch with your feature: `git checkout -b my-feature`;
+- Commit your changes: `git commit -m 'feat: My new feature'`;
+- Push to your branch: `git push origin my-feature`.
+- After the merge of your pull request is done, you can delete your branch.
+
+---
