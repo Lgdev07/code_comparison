@@ -2,16 +2,34 @@ package main
 
 import "fmt"
 
-type Vertex struct {
-	Lat, Long float64
-}
-
-var m map[string]Vertex
-
 func main() {
-	m = make(map[string]Vertex)
-	m["Bell Labs"] = Vertex{
-		40.68433, -74.39967,
+	population := map[string]int{
+		"China": 1411778724,
+		"India": 1381230134,
+		"USA":   332271672,
 	}
-	fmt.Println(m["Bell Labs"])
+	fmt.Println(population["USA"]) // 332271672
+
+	// add new key
+	population["Brazil"] = 22
+
+	// delete by key
+	delete(population, "Brazil")
+
+	// Checking if a key exists in a map
+	country, ok := population["India"]
+	fmt.Println(country, ok) // 1381230134, true
+
+	country, ok = population["Italy"]
+	fmt.Println(country, ok) // 0, false
+
+	// Iterating over a map
+
+	for index, value := range population {
+		fmt.Println(index, value)
+	}
+	// Output:
+	// China 1411778724
+	// India 1381230134
+	// USA 332271672
 }
