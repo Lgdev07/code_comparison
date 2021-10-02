@@ -12,4 +12,5 @@ config :logger, level: :warn
 # --------------------------#
 # Github
 # --------------------------#
-config :tesla, CodeComparison.Integrations.Github, adapter: CodeComparison.Integrations.Github.ApiMock
+config :tesla, CodeComparison.Integrations.Github,
+  adapter: CodeComparison.Integrations.Github.ApiMock

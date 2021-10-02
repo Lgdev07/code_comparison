@@ -12,9 +12,8 @@ defmodule CodeComparisonWeb.HomeLiveTest do
         {:ok,
          %Tesla.Env{
            status: 200,
-           body: [%{"author" => %{"login" => "test","html_url" => "url_test"}}]
-         }
-        }
+           body: [%{"author" => %{"login" => "test", "html_url" => "url_test"}}]
+         }}
     end)
 
     :ok
