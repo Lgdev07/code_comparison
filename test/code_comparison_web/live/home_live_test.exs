@@ -3,6 +3,22 @@ defmodule CodeComparisonWeb.HomeLiveTest do
 
   import Phoenix.LiveViewTest
 
+  import Mox
+
+  setup do
+    CodeComparison.Integrations.Github.ApiMock
+    |> expect(:call, 4, fn
+      %{method: :get}, _opts ->
+        {:ok,
+         %Tesla.Env{
+           status: 200,
+           body: [%{"author" => %{"login" => "test", "html_url" => "url_test"}}]
+         }}
+    end)
+
+    :ok
+  end
+
   describe "testing the topic changes" do
     test "should not assert since the topic does not exist", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
@@ -36,14 +52,6 @@ defmodule CodeComparisonWeb.HomeLiveTest do
       assert view
              |> element("form")
              |> render_change(%{"language1" => "go", "topic" => "map"}) =~ "go"
-    end
-
-    test "should assert since the language elixir exist", %{conn: conn} do
-      {:ok, view, _html} = live(conn, "/")
-
-      assert view
-             |> element("form")
-             |> render_change(%{"language1" => "go", "topic" => "map"}) =~ "elixir"
     end
 
     test "should assert since the language does not exist", %{conn: conn} do

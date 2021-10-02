@@ -12,20 +12,24 @@
     <div class="px-4 w-1/5 inline-block">
       <label for="topic", class="text-blue-100 text-sm font-medium text-gray-700">Topic</label>
       <select name="topic" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          <%= options_for_select(@topics, @topic) %>
+          <%= options_for_select(@topics, @selected_topic) %>
       </select>
     </div>
-    <div class="grid grid-cols-2 gap-4">
+    <div class="mt-5 grid grid-cols-2 gap-4">
       <div class="px-4">
-        <label for="language1", class="text-blue-100 text-sm font-medium text-gray-700">Language 1</label>
+        <%= if @language1.commiter_name != "" do %>
+          <span class="text-blue-100 text-sm font-medium text-gray-700"> Latest Contribution: <a href="<%= @language1.commiter_url %>"><%= @language1.commiter_name %></a></span>
+        <% end %>
         <select name="language1" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <%= options_for_select(@languages, @language1) %>
+            <%= options_for_select(Enum.map(@languages, &(&1.name)), @language1.name) %>
         </select>
       </div>
       <div class="px-4">
-        <label for="language2", class="text-blue-100 text-sm font-medium text-gray-700">Language 2</label>
+        <%= if @language2.commiter_name != "" do %>
+          <span class="text-blue-100 text-sm font-medium text-gray-700">Latest Contribution: <a href="<%= @language2.commiter_url %>"><%= @language2.commiter_name %></a></span>
+        <% end %>
         <select name="language2" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <%= options_for_select(@languages, @language2) %>
+            <%= options_for_select(Enum.map(@languages, &(&1.name)), @language2.name) %>
         </select>
       </div>
     </div>
@@ -34,16 +38,16 @@
 <div class="grid grid-cols-2 gap-4">
   <div class="px-4">
     <pre class="whitespace-pre-wrap">
-      <code class="language-<%= @language1 %>">
-      <%= @language1_code %>
+      <code class="language-<%= @language1.name %>">
+      <%= @language1.code %>
       </code>
     </pre>
   </div>
 
   <div class="px-4">
     <pre class="whitespace-pre-wrap">
-      <code class="language-<%= @language2 %>">
-      <%= @language2_code %>
+      <code class="language-<%= @language2.name %>">
+      <%= @language2.code %>
       </code>
     </pre>
   </div>
@@ -56,5 +60,5 @@
 </div>
 
 <footer class="font-calamity-bold p-4 text-blue-100 hover:text-blue-200">
-  <a href="https://github.com/Lgdev07">Github</a>
+  <a href="https://github.com/Lgdev07/code_comparison">Github</a>
 </footer>

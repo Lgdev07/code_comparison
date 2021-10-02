@@ -11,16 +11,16 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Start containers
-      run: docker-compose up -d --build
+      run: docker-compose -f docker-compose-ci.yml up -d --build
 
     - name: Install dependencies
-      run: docker-compose run --rm web mix deps.get
+      run: docker-compose -f docker-compose-ci.yml run --rm web mix deps.get
 
     - name: Format
-      run: docker-compose run --rm web mix format --check-formatted
+      run: docker-compose -f docker-compose-ci.yml run --rm web mix format --check-formatted
 
     - name: Credo
-      run: docker-compose run --rm web mix credo --strict
+      run: docker-compose -f docker-compose-ci.yml run --rm web mix credo --strict
 
   deploy:
     needs: test

@@ -9,7 +9,9 @@ services:
     command: mix phx.server
     restart: unless-stopped
     env_file:
-      - .env
+      - .env-sample
+    environment:
+      - MIX_ENV=test
     ports:
       - 4000:4000
     volumes:
