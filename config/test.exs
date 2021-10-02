@@ -8,3 +8,8 @@ config :code_comparison, CodeComparisonWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# --------------------------#
+# Github
+# --------------------------#
+config :tesla, CodeComparison.Integrations.Github, adapter: CodeComparison.Integrations.Github.ApiMock

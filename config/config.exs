@@ -1,13 +1,5 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
-#
-# This configuration file is loaded before any dependency and
-# is restricted to this project.
-
-# General application configuration
 use Mix.Config
 
-# Configures the endpoint
 config :code_comparison, CodeComparisonWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "W+CkxJR6nwpMksg1c0ikoNHWJ9487byRnYzQj7x9oSdta+w9Vu4e6AhCj1hyqqtP",
@@ -15,9 +7,8 @@ config :code_comparison, CodeComparisonWeb.Endpoint,
   pubsub_server: CodeComparison.PubSub,
   live_view: [signing_salt: "5BkNzZjs"]
 
-# Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
+config :code_comparison, :github, token: System.get_env("GITHUB_TOKEN")
+
 import_config "#{Mix.env()}.exs"
