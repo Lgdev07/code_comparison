@@ -51,7 +51,8 @@ defmodule CodeComparisonWeb.HomeLiveTest do
 
       assert view
              |> element("form")
-             |> render_change(%{"language1" => "go", "topic" => "map"}) =~ "go"
+             |> render_change(%{"_target" => ["language1"], "language1" => "go", "topic" => "map"}) =~
+               "go"
     end
 
     test "should assert since the language does not exist", %{conn: conn} do
@@ -59,7 +60,8 @@ defmodule CodeComparisonWeb.HomeLiveTest do
 
       refute view
              |> element("form")
-             |> render_change(%{"language1" => "go", "topic" => "map"}) =~ "not a language"
+             |> render_change(%{"_target" => ["language1"], "language1" => "go", "topic" => "map"}) =~
+               "not a language"
     end
   end
 end

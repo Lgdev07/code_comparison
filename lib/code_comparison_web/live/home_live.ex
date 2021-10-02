@@ -42,15 +42,13 @@ defmodule CodeComparisonWeb.HomeLive do
   end
 
   @impl true
-  def handle_event("update", values, socket) do
+  def handle_event("update", %{"_target" => [language]} = values, socket) do
     topic = Map.get(values, "topic")
-    language1 = Languages.get_language_by_topic(topic, Map.get(values, "language1"))
-    language2 = Languages.get_language_by_topic(topic, Map.get(values, "language2"))
+    language_struct = Languages.get_language_by_topic(topic, Map.get(values, language))
 
     {:noreply,
      socket
-     |> assign(language1: language1)
-     |> assign(language2: language2)
+     |> assign(String.to_atom(language), language_struct)
      |> push_event("highlightAll", %{})}
   end
 end
