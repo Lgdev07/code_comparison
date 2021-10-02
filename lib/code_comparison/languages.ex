@@ -1,8 +1,8 @@
 defmodule CodeComparison.Languages do
   @moduledoc false
 
-  alias CodeComparison.Structs.Language
   alias CodeComparison.Integrations.Github
+  alias CodeComparison.Structs.Language
 
   @spec get_languages_by_topic(String.t()) :: list
   def get_languages_by_topic(topic) do
