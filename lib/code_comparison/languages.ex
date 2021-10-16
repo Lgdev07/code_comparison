@@ -45,7 +45,7 @@ defmodule CodeComparison.Languages do
       name: language,
       code: get_language_code(language, topic),
       topic: topic,
-      path: "topics/#{topic}/#{get_filename(language, topic)}"
+      path: String.replace("topics/#{topic}/#{get_filename(language, topic)}", " ", "%20")
     })
   end
 
