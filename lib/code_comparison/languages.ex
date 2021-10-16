@@ -21,7 +21,7 @@ defmodule CodeComparison.Languages do
   @spec get_filename(String.t(), String.t()) :: String.t()
   defp get_filename(language, topic) do
     File.ls!("topics/#{topic}")
-    |> Enum.find(&String.contains?(&1, language))
+    |> Enum.find(&(String.split(&1, ".") |> List.first() == language))
   end
 
   @spec get_language(list(), String.t()) :: %Language{}
