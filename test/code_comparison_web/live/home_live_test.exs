@@ -25,34 +25,34 @@ defmodule CodeComparisonWeb.HomeLiveTest do
 
       refute view
              |> element("form")
-             |> render_change(%{"_target" => ["topic"], "topic" => "list"}) =~ "not a topic"
+             |> render_change(%{"_target" => ["topic"], "topic" => "List"}) =~ "not a topic"
     end
 
-    test "should assert since the topic list exist", %{conn: conn} do
+    test "should assert since the topic List exist", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
 
       assert view
              |> element("form")
-             |> render_change(%{"_target" => ["topic"], "topic" => "list"}) =~ "list"
+             |> render_change(%{"_target" => ["topic"], "topic" => "List"}) =~ "List"
     end
 
-    test "should assert since the topic map exist", %{conn: conn} do
+    test "should assert since the topic Map exist", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
 
       assert view
              |> element("form")
-             |> render_change(%{"_target" => ["topic"], "topic" => "map"}) =~ "map"
+             |> render_change(%{"_target" => ["topic"], "topic" => "Map"}) =~ "Map"
     end
   end
 
   describe "testing the language changes" do
-    test "should assert since the language go exist", %{conn: conn} do
+    test "should assert since the language Go exist", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
 
       assert view
              |> element("form")
-             |> render_change(%{"_target" => ["language1"], "language1" => "go", "topic" => "map"}) =~
-               "go"
+             |> render_change(%{"_target" => ["language1"], "language1" => "Go", "topic" => "Map"}) =~
+               "Go"
     end
 
     test "should assert since the language does not exist", %{conn: conn} do
@@ -60,7 +60,7 @@ defmodule CodeComparisonWeb.HomeLiveTest do
 
       refute view
              |> element("form")
-             |> render_change(%{"_target" => ["language1"], "language1" => "go", "topic" => "map"}) =~
+             |> render_change(%{"_target" => ["language1"], "language1" => "Go", "topic" => "Map"}) =~
                "not a language"
     end
   end
