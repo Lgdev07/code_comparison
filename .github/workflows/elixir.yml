@@ -17,10 +17,13 @@ jobs:
       run: docker-compose -f docker-compose-ci.yml run --rm web mix deps.get
 
     - name: Format
-      run: docker-compose -f docker-compose-ci.yml run --rm web mix format --check-formatted
+      run: docker exec code_comparison_web mix format --check-formatted
 
     - name: Credo
-      run: docker-compose -f docker-compose-ci.yml run --rm web mix credo --strict
+      run: docker exec code_comparison_web mix credo --strict
+
+    - name: Test
+      run: docker exec code_comparison_web mix test
 
   deploy:
     needs: test
