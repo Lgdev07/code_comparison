@@ -8,22 +8,25 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: docker-compose -f docker-compose-ci.yml run --rm web mix deps.get
+    - name: Build Docker image
+      run: docker build --build-arg MIX_ENV=test --tag code_comparison:latest .
 
-    - name: Start containers
-      run: docker-compose -f docker-compose-ci.yml up -d --build
+    - name: Start
+      run: docker-compose -f docker-compose-ci.yml run -d -e MIX_ENV=test -v /code_comparison/deps -v /code_comparison/_build --name web web /bin/sh
+
+    - name: Deps
+      run: docker exec web mix deps.get
 
     - name: Format
-      run: docker exec code_comparison_web mix format --check-formatted
+      run: docker exec web mix format --check-formatted
 
     - name: Credo
-      run: docker exec code_comparison_web mix credo --strict
+      run: docker exec web mix credo --strict
 
     - name: Test
-      run: docker exec code_comparison_web mix test
+      run: docker exec web mix test
 
   deploy:
     needs: test
