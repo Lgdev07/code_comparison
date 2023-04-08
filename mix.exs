@@ -36,7 +36,8 @@ defmodule CodeComparison.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:tesla, "~> 1.4.1"},
-      {:mox, "~> 1.0", only: :test}
+      {:mox, "~> 1.0", only: :test},
+      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev}
     ]
   end
 
