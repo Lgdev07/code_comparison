@@ -7,6 +7,17 @@ config :code_comparison, CodeComparisonWeb.Endpoint,
   pubsub_server: CodeComparison.PubSub,
   live_view: [signing_salt: "5BkNzZjs"]
 
+config :tailwind,
+  version: "3.0.12",
+  default: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
 config :phoenix, :json_library, Jason
 
 config :code_comparison, :github, token: System.get_env("GITHUB_TOKEN")

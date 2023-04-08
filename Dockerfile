@@ -2,8 +2,7 @@ FROM hexpm/elixir:1.14.0-erlang-25.1-alpine-3.15.6 AS base
 
 WORKDIR /code_comparison
 
-RUN mix do local.hex --force, local.rebar --force
-
+RUN mix do local.hex --force, local.rebar --force, deps.get, deps.compile, tailwind.install
 RUN apk add npm inotify-tools
 
 # -----------------
