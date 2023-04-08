@@ -11,12 +11,18 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
+  host = System.get_env("RENDER_EXTERNAL_HOSTNAME") || "localhost"
+  port = String.to_integer(System.get_env("PORT") || "4000")
+
 config :code_comparison, CodeComparisonWeb.Endpoint,
+  url: [host: host, port: 80],
   http: [
-    port: String.to_integer(System.get_env("PORT") || "4000"),
-    transport_options: [socket_opts: [:inet6]]
+    ip: {0, 0, 0, 0, 0, 0, 0, 0},
+    port: port
   ],
   secret_key_base: secret_key_base
+
+config :rustler_benchmark, RustlerBenchmarkWeb.Endpoint, server: true
 
 # ## Using releases (Elixir v1.9+)
 #
