@@ -44,7 +44,7 @@ defmodule CodeComparison.MixProject do
   defp aliases do
     [
       setup: ["deps.get"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "cmd npm install --prefix assets"]
     ]
   end
 end
