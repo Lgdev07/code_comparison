@@ -1,8 +1,12 @@
-FROM hexpm/elixir:1.14.0-erlang-25.1-alpine-3.15.6 AS base
+FROM hexpm/elixir:1.13.0-erlang-23.3.4.10-alpine-3.14.3 AS base
 
+RUN mkdir /code_comparison
 WORKDIR /code_comparison
 
+# Cache elixir deps
+ADD mix.exs ./
 RUN mix do local.hex --force, local.rebar --force, deps.get, deps.compile, tailwind.install
+
 RUN apk add npm inotify-tools
 
 # -----------------
@@ -33,14 +37,14 @@ RUN mix release
 # -----------------
 # PRODUCTION
 # -----------------
-FROM alpine:3.15.6
+FROM alpine:3.14.3
 
 WORKDIR /code_comparison
 
 ARG MIX_ENV=prod
 
 # install dependencies
-RUN apk add ncurses-libs curl libgcc libstdc++
+RUN apk add ncurses-libs curl
 
 COPY --from=release /code_comparison/_build/$MIX_ENV/rel/code_comparison ./
 
