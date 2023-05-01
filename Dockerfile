@@ -30,6 +30,8 @@ FROM build AS release
 # generate release executable
 RUN mix release
 
+RUN mix phx.digest
+
 # -----------------
 # PRODUCTION
 # -----------------
