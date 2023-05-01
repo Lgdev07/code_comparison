@@ -9,7 +9,7 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import topbar from "../vendor/topbar"
 import {LiveSocket} from "phoenix_live_view"
-import Prism from 'prismjs'
+import Prism from '../vendor/prism'
 
 window.addEventListener("phx:page-loading-stop", (info) => {
   document.querySelectorAll("pre code").forEach((block) => {
