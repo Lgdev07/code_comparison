@@ -14,7 +14,7 @@ config :esbuild,
     args:
       ~w(js/app.js vendor/fonts/calamity-bold.css --bundle --target=es2017 --outdir=../priv/static/assets --loader:.woff=file --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+    env: %{"NODE_PATH" => "#{Path.expand("../deps", __DIR__)}:#{Path.join(__DIR__, "node_modules")}"}
   ]
 
 config :tailwind,
