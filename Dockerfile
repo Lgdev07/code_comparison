@@ -17,19 +17,15 @@ RUN apk add curl bash git
 
 ARG MIX_ENV=prod
 ENV MIX_ENV=$MIX_ENV
-ENV SECRET_KEY_BASE="QPZGkZEM9fYKsbMnmbKE8/Cfk3VTSGZoBlPGL1sKYnxDWGTX7SWcQZdJZRDlPvnu"
 COPY . ./
 
 # install application
-RUN mix do deps.get, compile
+RUN mix do setup, compile
 
 # -----------------
 # RELEASE
 # -----------------
 FROM build AS release
-
-# digests and compresses static files
-RUN mix phx.digest
 
 # generate release executable
 RUN mix release
