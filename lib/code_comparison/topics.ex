@@ -3,7 +3,7 @@ defmodule CodeComparison.Topics do
 
   @spec get_topics :: list
   def get_topics do
-    File.ls!("../topics")
+    File.ls!("#{File.cwd!()}/topics")
     |> Enum.sort()
   end
 end
