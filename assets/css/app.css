@@ -1,15 +1,7 @@
 /* This file is for your main application css. */
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
-@layer base {
-  @font-face {
-    font-family: Calamity-Bold;
-    font-weight: 400;
-    src: url(../fonts/Calamity-Bold.woff) format("woff");
-  }
-}
+@tailwind base; 
+@tailwind components;
+@tailwind utilities;
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,

@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :code_comparison, CodeComparisonWeb.Endpoint,
   url: [host: "localhost"],
@@ -6,6 +6,16 @@ config :code_comparison, CodeComparisonWeb.Endpoint,
   render_errors: [view: CodeComparisonWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: CodeComparison.PubSub,
   live_view: [signing_salt: "5BkNzZjs"]
+
+# Configure esbuild (the version is required)
+config :esbuild,
+  version: "0.14.0",
+  default: [
+    args:
+      ~w(js/app.js vendor/fonts/calamity-bold.css --bundle --target=es2017 --outdir=../priv/static/assets --loader:.woff=file --external:/fonts/* --external:/images/*),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
 
 config :tailwind,
   version: "3.0.12",

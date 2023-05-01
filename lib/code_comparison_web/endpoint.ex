@@ -13,7 +13,7 @@ defmodule CodeComparisonWeb.Endpoint do
     at: "/",
     from: :code_comparison,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(assets fonts images favicon.ico robots.txt)
 
   if code_reloading? do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket

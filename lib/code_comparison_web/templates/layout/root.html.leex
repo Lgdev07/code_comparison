@@ -18,8 +18,9 @@
     <meta property="og:site_name" content="Code Comparison">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-    <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/assets/vendor/fonts/calamity-bold.css") %>"/>
+    <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/assets/app.css") %>"/>
+    <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/assets/js/app.js") %>"></script>
   </head>
   <body class="bg-blue-900 min-h-screen flex flex-col justify-between p-9">
     <%= @inner_content %>
