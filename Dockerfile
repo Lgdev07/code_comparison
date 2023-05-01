@@ -7,6 +7,7 @@ RUN mix do local.hex --force, local.rebar --force, deps.get, deps.compile
 
 RUN apk add npm inotify-tools
 RUN npm install --prefix assets
+RUN mix phx.digest
 
 # -----------------
 # BUILD
@@ -21,6 +22,8 @@ COPY . ./
 
 # install application
 RUN mix do setup, compile
+
+RUN mix phx.digest
 
 # -----------------
 # RELEASE
