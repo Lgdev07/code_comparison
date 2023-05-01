@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
@@ -10,14 +10,8 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :code_comparison, CodeComparisonWeb.Endpoint,
-  url: [host: "codecomparison.me", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json",
-  check_origin: [
-    "//codecomparison.me",
-    "//www.codecomparison.me",
-    "//dreary-sore-eland.gigalixirapp.com"
-  ],
-  force_ssl: [rewrite_on: [:x_forwarded_proto]]
+  url: [host: "example.com", port: 80],
+  cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -28,14 +22,14 @@ config :logger, level: :info
 # to the previous section and set your `:url` port to 443:
 #
 #     config :code_comparison, CodeComparisonWeb.Endpoint,
-#       ...
+#       ...,
 #       url: [host: "example.com", port: 443],
 #       https: [
+#         ...,
 #         port: 443,
 #         cipher_suite: :strong,
 #         keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
-#         certfile: System.get_env("SOME_APP_SSL_CERT_PATH"),
-#         transport_options: [socket_opts: [:inet6]]
+#         certfile: System.get_env("SOME_APP_SSL_CERT_PATH")
 #       ]
 #
 # The `cipher_suite` is set to `:strong` to support only the
@@ -55,7 +49,3 @@ config :logger, level: :info
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
-
-# Finally import the config/prod.secret.exs which loads secrets
-# and configuration from environment variables.
-import_config "prod.secret.exs"
