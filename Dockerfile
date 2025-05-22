@@ -18,6 +18,10 @@ ENV PORT=4000
 # This includes the 'topics/' directory, mix files, config, lib, assets, etc.
 COPY . .
 
+# Provide a dummy SECRET_KEY_BASE for compilation, must be at least 64 bytes long for prod.
+# This will be overridden by the runtime environment variable on Render.
+ENV SECRET_KEY_BASE="dummy_build_time_secret_key_base_must_be_at_least_64_bytes_long_for_prod_build_0123456789"
+
 # Install Elixir dependencies
 # --force is used to ensure local hex and rebar are up-to-date
 RUN mix local.hex --force && \

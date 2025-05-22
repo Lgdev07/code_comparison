@@ -70,3 +70,9 @@
 ## Deployment Notes
 
 The `topics/` directory, which contains all the code examples, is crucial for the application's functionality. The provided `Dockerfile` ensures that this directory is copied into the Docker image during the build process. The application then locates this directory at runtime using application-aware path construction (specifically, `Path.join(Application.app_dir(:code_comparison), "topics")`), making its access reliable in containerized environments like Render.
+
+### `SECRET_KEY_BASE` Handling
+
+The `SECRET_KEY_BASE` environment variable is critical for Phoenix applications.
+-   **Build Time**: The `Dockerfile` includes a temporary, dummy `SECRET_KEY_BASE` to ensure that asset compilation and other build tasks complete successfully when `MIX_ENV=prod`.
+-   **Runtime**: For your actual deployment on Render (or any other hosting environment), you **must** set a unique and strong `SECRET_KEY_BASE` as an environment variable. This runtime variable will be used by the running application, overriding the temporary one used during the build. You can generate a new secret using `mix phx.gen.secret`.
