@@ -15,13 +15,18 @@ defmodule CodeComparisonWeb.HomeLive do
         socket
         |> assign(selected_topic: nil)
         |> assign(topics: [])
-        |> assign(language1: CodeComparison.Structs.Language.build(%{})) # Default empty struct
-        |> assign(language2: CodeComparison.Structs.Language.build(%{})) # Default empty struct
+        # Default empty struct
+        |> assign(language1: CodeComparison.Structs.Language.build(%{}))
+        # Default empty struct
+        |> assign(language2: CodeComparison.Structs.Language.build(%{}))
         |> assign(languages: [])
+
       {:ok, socket}
     else
-      first_topic = List.first(topics) # Safe as topics is not empty
-      languages = Languages.get_languages_by_topic(first_topic) # This can be []
+      # Safe as topics is not empty
+      first_topic = List.first(topics)
+      # This can be []
+      languages = Languages.get_languages_by_topic(first_topic)
 
       # If languages is empty, get_language_by_topic will return an empty Language struct
       # because Languages.get_language (which it calls) returns an empty struct for an empty list.
@@ -40,6 +45,7 @@ defmodule CodeComparisonWeb.HomeLive do
         |> assign(language1: language1_struct)
         |> assign(language2: language2_struct)
         |> assign(languages: languages)
+
       {:ok, socket}
     end
   end

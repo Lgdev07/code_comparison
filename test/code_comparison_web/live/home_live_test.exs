@@ -36,19 +36,29 @@ defmodule CodeComparisonWeb.HomeLiveTest do
       # The template shows "No languages available" for the language selectors section.
       assert html =~ "No languages available"
       # Check for disabled select for topics
-      assert html =~ ~s(<select name="topic" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+      assert html =~
+               ~s(<select name="topic" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
       assert html =~ ~s(<option>No topics available</option>)
       # Check for disabled selects for languages
-      assert html =~ ~s(<select name="language1_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+      assert html =~
+               ~s(<select name="language1_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
       assert html =~ ~s(<option>No languages available</option>)
-      assert html =~ ~s(<select name="language2_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
+      assert html =~
+               ~s(<select name="language2_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
       assert html =~ ~s(<option>No languages available</option>)
 
       # Code display areas should show "No code to display"
       # and use "plaintext" class because language name will be empty.
       # The code blocks themselves are present, but contain the "No code to display" message.
-      assert view |> element("code.language-plaintext") |> List.first() |> Floki.text() =~ "No code to display."
-      assert view |> element("code.language-plaintext") |> List.last() |> Floki.text() =~ "No code to display."
+      assert view |> element("code.language-plaintext") |> List.first() |> Floki.text() =~
+               "No code to display."
+
+      assert view |> element("code.language-plaintext") |> List.last() |> Floki.text() =~
+               "No code to display."
     end
 
     test "mounts when the first topic has no languages" do
@@ -57,27 +67,40 @@ defmodule CodeComparisonWeb.HomeLiveTest do
 
       LanguagesMock
       |> Mox.expect(:get_languages_by_topic, fn "Topic1" -> [] end)
+
       # mount will call get_language_by_topic("Topic1", "")
       # which calls get_language([], "") -> returns @empty_lang_struct
       LanguagesMock
-      |> Mox.expect(:get_language_by_topic, fn "Topic1", "" -> @empty_lang_struct end) # For language1
+      # For language1
+      |> Mox.expect(:get_language_by_topic, fn "Topic1", "" -> @empty_lang_struct end)
+
       LanguagesMock
-      |> Mox.expect(:get_language_by_topic, fn "Topic1", "" -> @empty_lang_struct end) # For language2
+      # For language2
+      |> Mox.expect(:get_language_by_topic, fn "Topic1", "" -> @empty_lang_struct end)
 
       {:ok, view, html} = live_isolated(build_conn(), CodeComparisonWeb.HomeLive)
 
       assert html =~ ~s(<option selected value="Topic1">Topic1</option>)
-      assert html =~ "No languages available" # For language selectors part
+      # For language selectors part
+      assert html =~ "No languages available"
       # Check for disabled selects for languages
-      assert html =~ ~s(<select name="language1_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+      assert html =~
+               ~s(<select name="language1_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
       assert html =~ ~s(<option>No languages available</option>)
-      assert html =~ ~s(<select name="language2_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
+      assert html =~
+               ~s(<select name="language2_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
       assert html =~ ~s(<option>No languages available</option>)
 
       # Code display areas should show "No code to display."
       # and use "plaintext" class because language name will be empty.
-      assert view |> element("code.language-plaintext") |> List.first() |> Floki.text() =~ "No code to display."
-      assert view |> element("code.language-plaintext") |> List.last() |> Floki.text() =~ "No code to display."
+      assert view |> element("code.language-plaintext") |> List.first() |> Floki.text() =~
+               "No code to display."
+
+      assert view |> element("code.language-plaintext") |> List.last() |> Floki.text() =~
+               "No code to display."
     end
   end
 
@@ -98,31 +121,45 @@ defmodule CodeComparisonWeb.HomeLiveTest do
 
       # Mount sequence for "TopicWithLangs"
       LanguagesMock
-      |> Mox.expect(:get_languages_by_topic, fn "TopicWithLangs" -> [lang1_topic_with_langs] end) # For initial languages list
+      # For initial languages list
+      |> Mox.expect(:get_languages_by_topic, fn "TopicWithLangs" -> [lang1_topic_with_langs] end)
+
       LanguagesMock
-      |> Mox.expect(:get_language_by_topic, fn "TopicWithLangs", "Lang1" -> lang1_topic_with_langs end) # For lang1
+      # For lang1
+      |> Mox.expect(:get_language_by_topic, fn "TopicWithLangs", "Lang1" ->
+        lang1_topic_with_langs
+      end)
+
       LanguagesMock
-      |> Mox.expect(:get_language_by_topic, fn "TopicWithLangs", "Lang1" -> lang1_topic_with_langs end) # For lang2
+      # For lang2
+      |> Mox.expect(:get_language_by_topic, fn "TopicWithLangs", "Lang1" ->
+        lang1_topic_with_langs
+      end)
 
       {:ok, view, html} = live_isolated(build_conn(), CodeComparisonWeb.HomeLive)
 
       assert html =~ ~s(<option selected value="TopicWithLangs">TopicWithLangs</option>)
-      assert html =~ ~s(<option selected value="Lang1">Lang1</option>) # Assuming Lang1 is the only/first language
+      # Assuming Lang1 is the only/first language
+      assert html =~ ~s(<option selected value="Lang1">Lang1</option>)
       assert html =~ "code for Lang1"
       assert html =~ ~s(<code class="language-Lang1">)
 
       # Setup mocks for topic change event
       # When "TopicWithoutLangs" is selected:
       LanguagesMock
-      |> Mox.expect(:get_languages_by_topic, fn "TopicWithoutLangs" -> [] end) # This will be the new @languages
+      # This will be the new @languages
+      |> Mox.expect(:get_languages_by_topic, fn "TopicWithoutLangs" -> [] end)
 
       # HomeLive's handle_event for topic change calls Languages.get_language(new_languages_list, previous_lang_name_from_form)
       # If new_languages_list is [], Languages.get_language returns @empty_lang_struct.
       # The previous_lang_name_from_form will be "Lang1" for both, as obtained from the form values.
       LanguagesMock
-      |> Mox.expect(:get_language, fn [], "Lang1" -> @empty_lang_struct end) # For language1 assign
+      # For language1 assign
+      |> Mox.expect(:get_language, fn [], "Lang1" -> @empty_lang_struct end)
+
       LanguagesMock
-      |> Mox.expect(:get_language, fn [], "Lang1" -> @empty_lang_struct end) # For language2 assign
+      # For language2 assign
+      |> Mox.expect(:get_language, fn [], "Lang1" -> @empty_lang_struct end)
 
       # Simulate topic change
       # The form values sent on change will include the *currently selected* language names.
@@ -133,19 +170,27 @@ defmodule CodeComparisonWeb.HomeLiveTest do
         "language2" => "Lang1",
         "_target" => ["topic"]
       }
-      
+
       rendered_html_after_change =
         view
-        |> element(~s|form|) # Target the form for sending event data
+        # Target the form for sending event data
+        |> element(~s|form|)
         |> render_change("update", form_data)
 
+      assert rendered_html_after_change =~
+               ~s(<option selected value="TopicWithoutLangs">TopicWithoutLangs</option>)
 
-      assert rendered_html_after_change =~ ~s(<option selected value="TopicWithoutLangs">TopicWithoutLangs</option>)
-      assert rendered_html_after_change =~ "No languages available" # For language selectors part
+      # For language selectors part
+      assert rendered_html_after_change =~ "No languages available"
       # Check for disabled selects for languages
-      assert rendered_html_after_change =~ ~s(<select name="language1_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+      assert rendered_html_after_change =~
+               ~s(<select name="language1_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
       assert rendered_html_after_change =~ ~s(<option>No languages available</option>)
-      assert rendered_html_after_change =~ ~s(<select name="language2_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
+      assert rendered_html_after_change =~
+               ~s(<select name="language2_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">)
+
       assert rendered_html_after_change =~ ~s(<option>No languages available</option>)
 
       # Code display areas
@@ -156,9 +201,10 @@ defmodule CodeComparisonWeb.HomeLiveTest do
       # Need to parse the HTML to check content of specific elements
       parsed_after_change = Floki.parse_document!(rendered_html_after_change)
       code_elements_after_change = Floki.find(parsed_after_change, "code.language-plaintext")
+
       assert Enum.all?(code_elements_after_change, fn {_tag, _attrs, children} ->
-        Floki.text_content(children) =~ "No code to display."
-      end)
+               Floki.text_content(children) =~ "No code to display."
+             end)
     end
   end
 end

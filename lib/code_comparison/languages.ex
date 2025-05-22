@@ -10,31 +10,50 @@ defmodule CodeComparison.Languages do
   @spec get_languages_by_topic(String.t()) :: list(%Language{})
   def get_languages_by_topic(topic) do
     topic_dir = Path.join(base_topics_path(), topic)
+
     case File.ls(topic_dir) do
       {:ok, files} ->
         files
         |> Enum.map(&(String.split(&1, ".") |> List.first()))
-        |> Enum.map(&language_build(&1, topic)) # language_build handles its own file reads using new path logic
+        # language_build handles its own file reads using new path logic
+        |> Enum.map(&language_build(&1, topic))
         |> Enum.sort_by(& &1.name)
+
       {:error, reason} ->
-        IO.inspect("Failed to list languages for topic '#{topic}' at '#{topic_dir}': #{inspect(reason)}", label: "Languages Error")
+        IO.inspect(
+          "Failed to list languages for topic '#{topic}' at '#{topic_dir}': #{inspect(reason)}",
+          label: "Languages Error"
+        )
+
         []
     end
   end
 
   @spec get_language_code(String.t(), String.t()) :: String.t()
   def get_language_code(language_name, topic) do
-    filename = get_filename(language_name, topic) # This will use the updated get_filename
+    # This will use the updated get_filename
+    filename = get_filename(language_name, topic)
 
     if filename == nil do
-      IO.inspect("Filename not found for language '#{language_name}' in topic '#{topic}' when getting code.", label: "Languages Error")
+      IO.inspect(
+        "Filename not found for language '#{language_name}' in topic '#{topic}' when getting code.",
+        label: "Languages Error"
+      )
+
       ""
     else
       file_path = Path.join([base_topics_path(), topic, filename])
+
       case File.read(file_path) do
-        {:ok, code} -> code
+        {:ok, code} ->
+          code
+
         {:error, reason} ->
-          IO.inspect("Failed to read language code for '#{language_name}' from '#{file_path}': #{inspect(reason)}", label: "Languages Error")
+          IO.inspect(
+            "Failed to read language code for '#{language_name}' from '#{file_path}': #{inspect(reason)}",
+            label: "Languages Error"
+          )
+
           ""
       end
     end
@@ -43,11 +62,17 @@ defmodule CodeComparison.Languages do
   @spec get_filename(String.t(), String.t()) :: String.t() | nil
   defp get_filename(language_name, topic) do
     topic_dir = Path.join(base_topics_path(), topic)
+
     case File.ls(topic_dir) do
       {:ok, files} ->
         Enum.find(files, &(String.split(&1, ".") |> List.first() == language_name))
+
       {:error, reason} ->
-        IO.inspect("Failed to list files in '#{topic_dir}' to find filename for '#{language_name}': #{inspect(reason)}", label: "Languages Error")
+        IO.inspect(
+          "Failed to list files in '#{topic_dir}' to find filename for '#{language_name}': #{inspect(reason)}",
+          label: "Languages Error"
+        )
+
         nil
     end
   end
@@ -55,8 +80,14 @@ defmodule CodeComparison.Languages do
   @spec get_language(list(%Language{}), String.t()) :: %Language{}
   def get_language(topic_languages, current_language_name) do
     if topic_languages == [] do
-      %Language{ # Using alias for brevity
-        name: "", code: "", topic: "", commiter_name: "", commiter_url: "", path: ""
+      # Using alias for brevity
+      %Language{
+        name: "",
+        code: "",
+        topic: "",
+        commiter_name: "",
+        commiter_url: "",
+        path: ""
       }
     else
       # The topic should ideally be consistent for all languages in topic_languages.
@@ -67,14 +98,17 @@ defmodule CodeComparison.Languages do
       found_language_struct = Enum.find(topic_languages, &(&1.name == current_language_name))
 
       cond do
-        found_language_struct -> # Language found in the pre-loaded list
+        # Language found in the pre-loaded list
+        found_language_struct ->
           found_language_struct |> put_commit_values()
-        true -> # Language not found by name, or current_language_name is empty. Default to first.
-                # This path also handles if current_language_name was for a language not in this topic.
-                # The original code's `Enum.member?` check followed by `language_build` or `List.first`
-                # had a subtle difference. `language_build` would reload the code.
-                # Here, we assume `topic_languages` are complete structs.
-                # If `current_language_name` isn't in the list, we take the first.
+
+        # Language not found by name, or current_language_name is empty. Default to first.
+        true ->
+          # This path also handles if current_language_name was for a language not in this topic.
+          # The original code's `Enum.member?` check followed by `language_build` or `List.first`
+          # had a subtle difference. `language_build` would reload the code.
+          # Here, we assume `topic_languages` are complete structs.
+          # If `current_language_name` isn't in the list, we take the first.
           topic_languages |> List.first() |> put_commit_values()
       end
     end
@@ -84,7 +118,8 @@ defmodule CodeComparison.Languages do
   def get_language_by_topic(topic, current_language_name) do
     # This function, as per existing code, rebuilds the language struct.
     # It's used in HomeLive mount and language change event.
-    language_build(current_language_name, topic) # This now uses new path logic internally
+    # This now uses new path logic internally
+    language_build(current_language_name, topic)
     |> put_commit_values()
   end
 
@@ -96,15 +131,22 @@ defmodule CodeComparison.Languages do
       if filename do
         "topics/#{topic}/#{filename}"
       else
-        IO.inspect("Filename is nil for language '#{language_name}' in topic '#{topic}' during language_build. Path will be empty.", label: "Languages Warning")
-        "" # Empty path if filename couldn't be determined
+        IO.inspect(
+          "Filename is nil for language '#{language_name}' in topic '#{topic}' during language_build. Path will be empty.",
+          label: "Languages Warning"
+        )
+
+        # Empty path if filename couldn't be determined
+        ""
       end
 
     Language.build(%{
       name: language_name,
-      code: get_language_code(language_name, topic), # Uses new path logic and error handling
+      # Uses new path logic and error handling
+      code: get_language_code(language_name, topic),
       topic: topic,
-      path: String.replace(github_path, " ", "%20") # Path for GitHub API
+      # Path for GitHub API
+      path: String.replace(github_path, " ", "%20")
     })
   end
 
@@ -114,20 +156,25 @@ defmodule CodeComparison.Languages do
     # Ensure path is not empty before calling GitHub API
     if language.path && language.path != "" do
       case Application.get_env(:code_comparison, :github)[:token] do
-        nil -> put_empty_commit_values(language)
-        _ -> # Pass the actual language struct, not just path
-             put_commit_values_with_api(language, Github.get_last_commit(language.path))
+        nil ->
+          put_empty_commit_values(language)
+
+        # Pass the actual language struct, not just path
+        _ ->
+          put_commit_values_with_api(language, Github.get_last_commit(language.path))
       end
     else
-      put_empty_commit_values(language) # Path is empty, skip GitHub call
+      # Path is empty, skip GitHub call
+      put_empty_commit_values(language)
     end
   end
 
   # Renamed to avoid clash and clarify it's the one calling API
   defp put_commit_values_with_api(language, {:ok, body}) do
     # Assuming body structure is a list of commits
-    first_commit = List.first(body) # Safe navigation for author needed
-    
+    # Safe navigation for author needed
+    first_commit = List.first(body)
+
     author_name = first_commit |> get_in(["author", "login"])
     author_url = first_commit |> get_in(["author", "html_url"])
 

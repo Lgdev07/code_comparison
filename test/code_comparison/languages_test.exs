@@ -71,10 +71,12 @@ defmodule CodeComparison.LanguagesTest do
       # Let's refine the assertion to only care about the name, which is safe from put_commit_values side effects.
       selected_lang1 = Languages.get_language(languages, "Lang1")
       assert selected_lang1.name == "Lang1"
-      assert selected_lang1.topic == "Topic1" # Topic is also set by language_build
+      # Topic is also set by language_build
+      assert selected_lang1.topic == "Topic1"
 
       selected_lang2_by_default = Languages.get_language(languages, "NonExistentLang")
-      assert selected_lang2_by_default.name == "Lang1" # Defaults to first
+      # Defaults to first
+      assert selected_lang2_by_default.name == "Lang1"
       assert selected_lang2_by_default.topic == "Topic1"
     end
   end
