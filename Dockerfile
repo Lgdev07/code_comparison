@@ -10,3 +10,12 @@ RUN apt-get update && \
 
 # Now it's safe to run mix commands
 RUN mix do local.hex --force, local.rebar --force
+
+# Copy the entire application
+COPY . .
+
+# Install Elixir dependencies
+RUN mix deps.get
+
+# Install npm dependencies
+RUN cd assets && npm install

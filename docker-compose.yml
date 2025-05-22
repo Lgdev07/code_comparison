@@ -14,3 +14,4 @@ services:
       - 4000:4000
     volumes:
       - .:/code_comparison
+      - ./topics:/code_comparison/topics

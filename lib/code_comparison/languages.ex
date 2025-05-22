@@ -1,11 +1,12 @@
 defmodule CodeComparison.Languages do
   @moduledoc false
+  @behaviour CodeComparison.Languages.Behaviour
 
   alias CodeComparison.Integrations.Github
   alias CodeComparison.Structs.Language
 
   # Helper to get the base path for topics
-  defp base_topics_path, do: Path.join(Application.app_dir(:code_comparison), "topics")
+  defp base_topics_path, do: Path.expand("topics", File.cwd!())
 
   @spec get_languages_by_topic(String.t()) :: list(%Language{})
   def get_languages_by_topic(topic) do
@@ -90,10 +91,6 @@ defmodule CodeComparison.Languages do
         path: ""
       }
     else
-      # The topic should ideally be consistent for all languages in topic_languages.
-      # Taking it from the first element.
-      topic = List.first(topic_languages).topic
-
       # Find if the current_language_name exists in the list
       found_language_struct = Enum.find(topic_languages, &(&1.name == current_language_name))
 
@@ -123,7 +120,8 @@ defmodule CodeComparison.Languages do
     |> put_commit_values()
   end
 
-  defp language_build(language_name, topic) do
+  @spec language_build(String.t(), String.t()) :: %Language{}
+  def language_build(language_name, topic) do
     # get_filename now returns nil if not found
     filename = get_filename(language_name, topic)
 
@@ -148,6 +146,13 @@ defmodule CodeComparison.Languages do
       # Path for GitHub API
       path: String.replace(github_path, " ", "%20")
     })
+  end
+
+  @spec get_all_languages_from_topic_list(list(String.t())) :: list(%Language{})
+  def get_all_languages_from_topic_list(topics) do
+    topics
+    |> Enum.flat_map(&get_languages_by_topic/1)
+    |> Enum.sort_by(& &1.name)
   end
 
   # put_commit_values and its helpers remain largely the same,

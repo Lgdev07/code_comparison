@@ -1,11 +1,11 @@
 defmodule CodeComparison.Topics do
   @moduledoc false
+  @behaviour CodeComparison.Topics.Behaviour
 
   @spec get_topics :: list
   def get_topics do
-    # topics_dir is expected to be at the root of the application.
-    # Application.app_dir(:code_comparison) should point to the app's root directory (e.g., /app or /code_comparison).
-    topics_dir = Path.join(Application.app_dir(:code_comparison), "topics")
+    # Use the topics directory at the project root
+    topics_dir = Path.expand("topics", File.cwd!())
 
     case File.ls(topics_dir) do
       {:ok, files} ->

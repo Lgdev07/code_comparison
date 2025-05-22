@@ -1,24 +1,34 @@
 defmodule CodeComparisonWeb.HomeLive do
   @moduledoc false
 
-  alias CodeComparison.{Languages, Topics}
-
   use Phoenix.LiveView
   use Phoenix.HTML
 
   @impl true
   def mount(_params, _session, socket) do
-    topics = Topics.get_topics()
+    topics_module = Application.get_env(:code_comparison, :topics_module, CodeComparison.Topics)
+
+    languages_module =
+      Application.get_env(:code_comparison, :languages_module, CodeComparison.Languages)
+
+    topics = topics_module.get_topics()
 
     if topics == [] do
+      empty_language = %{
+        name: "",
+        code: "",
+        topic: "",
+        path: ""
+      }
+
       socket =
         socket
         |> assign(selected_topic: nil)
         |> assign(topics: [])
-        # Default empty struct
-        |> assign(language1: CodeComparison.Structs.Language.build(%{}))
-        # Default empty struct
-        |> assign(language2: CodeComparison.Structs.Language.build(%{}))
+        # Default empty struct with required fields
+        |> assign(language1: CodeComparison.Structs.Language.build(empty_language))
+        # Default empty struct with required fields
+        |> assign(language2: CodeComparison.Structs.Language.build(empty_language))
         |> assign(languages: [])
 
       {:ok, socket}
@@ -26,17 +36,15 @@ defmodule CodeComparisonWeb.HomeLive do
       # Safe as topics is not empty
       first_topic = List.first(topics)
       # This can be []
-      languages = Languages.get_languages_by_topic(first_topic)
+      languages = languages_module.get_languages_by_topic(first_topic)
 
-      # If languages is empty, get_language_by_topic will return an empty Language struct
-      # because Languages.get_language (which it calls) returns an empty struct for an empty list.
+      # If languages is empty, get_language will return an empty Language struct
       # If languages is not empty, it will use the first language's name.
-      # An empty name for default_lang_name will result in the first language being chosen by get_language if languages is not empty,
-      # or an empty struct if languages is empty.
       default_lang_name = if languages != [], do: List.first(languages).name, else: ""
 
-      language1_struct = Languages.get_language_by_topic(first_topic, default_lang_name)
-      language2_struct = Languages.get_language_by_topic(first_topic, default_lang_name)
+      # Use get_language instead of get_language_by_topic to avoid duplicate get_languages_by_topic call
+      language1_struct = languages_module.get_language(languages, default_lang_name)
+      language2_struct = languages_module.get_language(languages, default_lang_name)
 
       socket =
         socket
@@ -52,10 +60,13 @@ defmodule CodeComparisonWeb.HomeLive do
 
   @impl true
   def handle_event("update", %{"_target" => ["topic"]} = values, socket) do
+    languages_module =
+      Application.get_env(:code_comparison, :languages_module, CodeComparison.Languages)
+
     topic = Map.get(values, "topic")
-    languages = Languages.get_languages_by_topic(topic)
-    language1 = Languages.get_language(languages, Map.get(values, "language1"))
-    language2 = Languages.get_language(languages, Map.get(values, "language2"))
+    languages = languages_module.get_languages_by_topic(topic)
+    language1 = languages_module.get_language(languages, Map.get(values, "language1"))
+    language2 = languages_module.get_language(languages, Map.get(values, "language2"))
 
     {:noreply,
      socket
@@ -68,8 +79,12 @@ defmodule CodeComparisonWeb.HomeLive do
 
   @impl true
   def handle_event("update", %{"_target" => [language]} = values, socket) do
+    languages_module =
+      Application.get_env(:code_comparison, :languages_module, CodeComparison.Languages)
+
     topic = Map.get(values, "topic")
-    language_struct = Languages.get_language_by_topic(topic, Map.get(values, language))
+    languages = languages_module.get_languages_by_topic(topic)
+    language_struct = languages_module.get_language(languages, Map.get(values, language))
 
     {:noreply,
      socket
