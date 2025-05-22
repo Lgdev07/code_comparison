@@ -12,18 +12,24 @@ secret_key_base =
     """
 
 config :code_comparison, CodeComparisonWeb.Endpoint,
+  url: [host: System.get_env("RENDER_EXTERNAL_HOSTNAME") || "localhost", port: 80],
   http: [
+    ip: {0, 0, 0, 0, 0, 0, 0, 0},
     port: String.to_integer(System.get_env("PORT") || "4000"),
     transport_options: [socket_opts: [:inet6]]
   ],
-  secret_key_base: secret_key_base
+  secret_key_base: secret_key_base,
+  check_origin: [
+    "//code-comparison.onrender.com",
+    "https://code-comparison.onrender.com"
+  ]
 
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start each relevant endpoint:
 #
-#     config :code_comparison, CodeComparisonWeb.Endpoint, server: true
+config :code_comparison, CodeComparisonWeb.Endpoint, server: true
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.

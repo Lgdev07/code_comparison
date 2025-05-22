@@ -9,6 +9,8 @@ defmodule CodeComparison.Languages do
   defp base_topics_path, do: Path.expand("topics", File.cwd!())
 
   @spec get_languages_by_topic(String.t()) :: list(%Language{})
+  def get_languages_by_topic(nil), do: []
+
   def get_languages_by_topic(topic) do
     topic_dir = Path.join(base_topics_path(), topic)
 
