@@ -1,36 +1,72 @@
 defmodule CodeComparisonWeb.HomeLive do
   @moduledoc false
 
-  alias CodeComparison.{Languages, Topics}
-
   use Phoenix.LiveView
   use Phoenix.HTML
 
   @impl true
   def mount(_params, _session, socket) do
-    topics = Topics.get_topics()
-    first_topic = List.first(topics)
+    topics_module = Application.get_env(:code_comparison, :topics_module, CodeComparison.Topics)
 
-    languages = Languages.get_languages_by_topic(first_topic)
-    language = Languages.get_language_by_topic(first_topic, List.first(languages).name)
+    languages_module =
+      Application.get_env(:code_comparison, :languages_module, CodeComparison.Languages)
 
-    socket =
-      socket
-      |> assign(selected_topic: first_topic)
-      |> assign(topics: topics)
-      |> assign(language1: language)
-      |> assign(language2: language)
-      |> assign(languages: languages)
+    topics = topics_module.get_topics()
 
-    {:ok, socket}
+    if topics == [] do
+      empty_language = %{
+        name: "",
+        code: "",
+        topic: "",
+        path: ""
+      }
+
+      socket =
+        socket
+        |> assign(selected_topic: nil)
+        |> assign(topics: [])
+        # Default empty struct with required fields
+        |> assign(language1: CodeComparison.Structs.Language.build(empty_language))
+        # Default empty struct with required fields
+        |> assign(language2: CodeComparison.Structs.Language.build(empty_language))
+        |> assign(languages: [])
+
+      {:ok, socket}
+    else
+      # Safe as topics is not empty
+      first_topic = List.first(topics)
+      # This can be []
+      languages = languages_module.get_languages_by_topic(first_topic)
+
+      # If languages is empty, get_language will return an empty Language struct
+      # If languages is not empty, it will use the first language's name.
+      default_lang_name = if languages != [], do: List.first(languages).name, else: ""
+
+      # Use get_language instead of get_language_by_topic to avoid duplicate get_languages_by_topic call
+      language1_struct = languages_module.get_language(languages, default_lang_name)
+      language2_struct = languages_module.get_language(languages, default_lang_name)
+
+      socket =
+        socket
+        |> assign(selected_topic: first_topic)
+        |> assign(topics: topics)
+        |> assign(language1: language1_struct)
+        |> assign(language2: language2_struct)
+        |> assign(languages: languages)
+
+      {:ok, socket}
+    end
   end
 
   @impl true
   def handle_event("update", %{"_target" => ["topic"]} = values, socket) do
+    languages_module =
+      Application.get_env(:code_comparison, :languages_module, CodeComparison.Languages)
+
     topic = Map.get(values, "topic")
-    languages = Languages.get_languages_by_topic(topic)
-    language1 = Languages.get_language(languages, Map.get(values, "language1"))
-    language2 = Languages.get_language(languages, Map.get(values, "language2"))
+    languages = languages_module.get_languages_by_topic(topic)
+    language1 = languages_module.get_language(languages, Map.get(values, "language1"))
+    language2 = languages_module.get_language(languages, Map.get(values, "language2"))
 
     {:noreply,
      socket
@@ -43,8 +79,12 @@ defmodule CodeComparisonWeb.HomeLive do
 
   @impl true
   def handle_event("update", %{"_target" => [language]} = values, socket) do
+    languages_module =
+      Application.get_env(:code_comparison, :languages_module, CodeComparison.Languages)
+
     topic = Map.get(values, "topic")
-    language_struct = Languages.get_language_by_topic(topic, Map.get(values, language))
+    languages = languages_module.get_languages_by_topic(topic)
+    language_struct = languages_module.get_language(languages, Map.get(values, language))
 
     {:noreply,
      socket
