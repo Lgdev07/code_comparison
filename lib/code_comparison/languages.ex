@@ -26,11 +26,22 @@ defmodule CodeComparison.Languages do
 
   @spec get_language(list(), String.t()) :: %Language{}
   def get_language(topic_languages, current_language) do
-    topic = List.first(topic_languages).topic
+    if topic_languages == [] do
+      %CodeComparison.Structs.Language{
+        name: "",
+        code: "",
+        topic: "",
+        commiter_name: "",
+        commiter_url: "",
+        path: ""
+      }
+    else
+      topic = List.first(topic_languages).topic
 
-    case Enum.member?(Enum.map(topic_languages, & &1.name), current_language) do
-      true -> language_build(current_language, topic) |> put_commit_values()
-      false -> topic_languages |> List.first() |> put_commit_values()
+      case Enum.member?(Enum.map(topic_languages, & &1.name), current_language) do
+        true -> language_build(current_language, topic) |> put_commit_values()
+        false -> topic_languages |> List.first() |> put_commit_values()
+      end
     end
   end
 

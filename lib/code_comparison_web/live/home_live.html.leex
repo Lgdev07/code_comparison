@@ -10,44 +10,76 @@
 
 <form phx-change="update" phx-hook="CodeHighlight" id="content" class="font-calamity-bold text-center">
     <div class="px-4 w-1/5 inline-block">
-      <label for="topic", class="text-blue-100 text-sm font-medium text-gray-700">Topic</label>
-      <select name="topic" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          <%= options_for_select(@topics, @selected_topic) %>
-      </select>
-    </div>
-    <div class="mt-5 grid grid-cols-2 gap-4">
-      <div class="px-4">
-        <%= if @language1.commiter_name != "" do %>
-          <span class="text-blue-100 text-sm font-medium text-gray-700"> Latest Contribution: <a href="<%= @language1.commiter_url %>"><%= @language1.commiter_name %></a></span>
-        <% end %>
-        <select name="language1" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <%= options_for_select(Enum.map(@languages, &(&1.name)), @language1.name) %>
+      <label for="topic" class="text-blue-100 text-sm font-medium text-gray-700">Topic</label>
+      <%= if @topics && Enum.any?(@topics) do %>
+        <select name="topic" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <%= options_for_select(@topics, @selected_topic) %>
         </select>
-      </div>
-      <div class="px-4">
-        <%= if @language2.commiter_name != "" do %>
-          <span class="text-blue-100 text-sm font-medium text-gray-700">Latest Contribution: <a href="<%= @language2.commiter_url %>"><%= @language2.commiter_name %></a></span>
-        <% end %>
-        <select name="language2" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <%= options_for_select(Enum.map(@languages, &(&1.name)), @language2.name) %>
+      <% else %>
+        <select name="topic" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">
+            <option>No topics available</option>
         </select>
-      </div>
+      <% end %>
     </div>
+
+    <%= if @languages && Enum.any?(@languages) do %>
+      <div class="mt-5 grid grid-cols-2 gap-4">
+        <div class="px-4">
+          <%= if @language1 && @language1.commiter_name && @language1.commiter_name != "" do %>
+            <span class="text-blue-100 text-sm font-medium text-gray-700"> Latest Contribution: <a href="<%= @language1.commiter_url %>" target="_blank" rel="noopener noreferrer"><%= @language1.commiter_name %></a></span>
+          <% end %>
+          <select name="language1" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <%= options_for_select(Enum.map(@languages, &(&1.name)), if(@language1, do: @language1.name, else: nil)) %>
+          </select>
+        </div>
+        <div class="px-4">
+          <%= if @language2 && @language2.commiter_name && @language2.commiter_name != "" do %>
+            <span class="text-blue-100 text-sm font-medium text-gray-700">Latest Contribution: <a href="<%= @language2.commiter_url %>" target="_blank" rel="noopener noreferrer"><%= @language2.commiter_name %></a></span>
+          <% end %>
+          <select name="language2" class="w-full px-3 py-2 mt-1 bg-blue-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <%= options_for_select(Enum.map(@languages, &(&1.name)), if(@language2, do: @language2.name, else: nil)) %>
+          </select>
+        </div>
+      </div>
+    <% else %>
+      <div class="mt-5 grid grid-cols-2 gap-4">
+        <div class="px-4">
+          <label for="language1_disabled" class="text-blue-100 text-sm font-medium">Language 1</label>
+          <select name="language1_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">
+            <option>No languages available</option>
+          </select>
+        </div>
+        <div class="px-4">
+          <label for="language2_disabled" class="text-blue-100 text-sm font-medium">Language 2</label>
+          <select name="language2_disabled" disabled class="w-full px-3 py-2 mt-1 bg-gray-200 text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm">
+            <option>No languages available</option>
+          </select>
+        </div>
+      </div>
+    <% end %>
 </form>
 
 <div class="grid grid-cols-2 gap-4">
   <div class="px-4">
     <pre class="whitespace-pre-wrap">
-      <code class="language-<%= @language1.name %>">
-      <%= @language1.code %>
+      <code class="language-<%= if @language1 && @language1.name && @language1.name != "", do: @language1.name, else: "plaintext" %>">
+      <%= if @language1 && @language1.code && @language1.code != "" do %>
+        <%= @language1.code %>
+      <% else %>
+        <span class="text-gray-400">No code to display.</span>
+      <% end %>
       </code>
     </pre>
   </div>
 
   <div class="px-4">
     <pre class="whitespace-pre-wrap">
-      <code class="language-<%= @language2.name %>">
-      <%= @language2.code %>
+      <code class="language-<%= if @language2 && @language2.name && @language2.name != "", do: @language2.name, else: "plaintext" %>">
+      <%= if @language2 && @language2.code && @language2.code != "" do %>
+        <%= @language2.code %>
+      <% else %>
+        <span class="text-gray-400">No code to display.</span>
+      <% end %>
       </code>
     </pre>
   </div>

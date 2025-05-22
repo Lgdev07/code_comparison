@@ -9,20 +9,39 @@ defmodule CodeComparisonWeb.HomeLive do
   @impl true
   def mount(_params, _session, socket) do
     topics = Topics.get_topics()
-    first_topic = List.first(topics)
 
-    languages = Languages.get_languages_by_topic(first_topic)
-    language = Languages.get_language_by_topic(first_topic, List.first(languages).name)
+    if topics == [] do
+      socket =
+        socket
+        |> assign(selected_topic: nil)
+        |> assign(topics: [])
+        |> assign(language1: CodeComparison.Structs.Language.build(%{})) # Default empty struct
+        |> assign(language2: CodeComparison.Structs.Language.build(%{})) # Default empty struct
+        |> assign(languages: [])
+      {:ok, socket}
+    else
+      first_topic = List.first(topics) # Safe as topics is not empty
+      languages = Languages.get_languages_by_topic(first_topic) # This can be []
 
-    socket =
-      socket
-      |> assign(selected_topic: first_topic)
-      |> assign(topics: topics)
-      |> assign(language1: language)
-      |> assign(language2: language)
-      |> assign(languages: languages)
+      # If languages is empty, get_language_by_topic will return an empty Language struct
+      # because Languages.get_language (which it calls) returns an empty struct for an empty list.
+      # If languages is not empty, it will use the first language's name.
+      # An empty name for default_lang_name will result in the first language being chosen by get_language if languages is not empty,
+      # or an empty struct if languages is empty.
+      default_lang_name = if languages != [], do: List.first(languages).name, else: ""
 
-    {:ok, socket}
+      language1_struct = Languages.get_language_by_topic(first_topic, default_lang_name)
+      language2_struct = Languages.get_language_by_topic(first_topic, default_lang_name)
+
+      socket =
+        socket
+        |> assign(selected_topic: first_topic)
+        |> assign(topics: topics)
+        |> assign(language1: language1_struct)
+        |> assign(language2: language2_struct)
+        |> assign(languages: languages)
+      {:ok, socket}
+    end
   end
 
   @impl true
