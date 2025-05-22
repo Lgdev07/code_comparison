@@ -66,3 +66,7 @@
 - After the merge of your pull request is done, you can delete your branch.
 
 ---
+
+## Deployment Notes
+
+The `topics/` directory, which contains all the code examples, is crucial for the application's functionality. The provided `Dockerfile` ensures that this directory is copied into the Docker image during the build process. The application then locates this directory at runtime using application-aware path construction (specifically, `Path.join(Application.app_dir(:code_comparison), "topics")`), making its access reliable in containerized environments like Render.
