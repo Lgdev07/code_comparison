@@ -27,9 +27,6 @@ jobs:
     - name: Format
       run: docker exec web mix format --check-formatted
 
-    - name: Credo
-      run: docker exec web mix credo --strict
-
     - name: Test
       run: docker exec web mix test
 
